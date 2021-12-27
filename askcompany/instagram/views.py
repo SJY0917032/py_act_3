@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from rest_framework import generics, serializers
 from rest_framework.viewsets import ModelViewSet
 from .serializers import PostSerializer
 from .models import Post
@@ -20,3 +21,8 @@ class PostViewSet(ModelViewSet):
         print("request body : ", request.body) # 실제 Product라면 Logger를 사용한다. dont use print
         print("request POST : ", request.POST)
         return super().dispatch(request, *args, **kwargs)
+    
+# 공개여부에대해서 직렬화가 다르다면 적용시킬수있다.
+class PublicPostListAPIView(generics.ListCreateAPIView):
+    queryset = Post.objects.all() # filter(is_public=True)
+    serializer_class = PostSerializer
