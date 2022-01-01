@@ -71,7 +71,7 @@ class PostDetailAPIView(RetrieveAPIView):
         post = self.get_object()
         
         return Response({
-            'post' : PostSerializer(post).data,
+            'post' : post,
         })
     
     
