@@ -5,7 +5,7 @@ from rest_framework.generics import RetrieveAPIView
 from rest_framework.renderers import TemplateHTMLRenderer
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.decorators import api_view,action, renderer_classes
+from rest_framework.decorators import api_view,action, authentication_classes, renderer_classes
 from rest_framework.viewsets import ModelViewSet
 from .serializers import PostSerializer
 from .models import Post
@@ -22,6 +22,13 @@ from .models import Post
 class PostViewSet(ModelViewSet):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
+    # authentication_classes = [] login_required
+    
+    def perform_create(self, serializer):
+        # FIXME 로그인이돼있다는 가정하
+        author = self.request.user # User or AnonymousUser(인증받지 못한 유저)
+        ip=self.request.META['REMOTE_ADDR']
+        serializer.save(ip=ip, author=author)
     
     @action(detail = False, methods=['GET'])
     def public(self, request):
